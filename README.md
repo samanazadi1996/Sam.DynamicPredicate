@@ -8,7 +8,13 @@ The Sam.DynamicPredicate package allows you to create LINQ queries dynamically b
 
 ### How to Use the Sam.DynamicPredicate Package
 
-To use this package, first install it into your project using the following command
+To use this package, You should install Sam.DynamicPredicate with [NuGet](https://www.nuget.org/packages/Sam.DynamicPredicate) using the following command
+
+```sh
+Install-Package Sam.DynamicPredicate
+```
+
+Or via the .NET Core command line interface:
 
 ```sh
 dotnet add package Sam.DynamicPredicate
@@ -17,7 +23,6 @@ dotnet add package Sam.DynamicPredicate
 ### Example Usage in an ASP.NET Core Controller
 
 After installing the package, you can use it to dynamically build LINQ queries based on string predicates. Below is an example within an ASP.NET Core controller (ProductController):
-
 
 ``` c#
 [ApiController]
@@ -82,6 +87,16 @@ namespace.
 
 5. ### High Performance
    - With this package, the generated queries are optimized and directly translated into equivalent SQL statements, ensuring high performance during execution.
+
+---
+## Open Source Project Availability
+The Sam.DynamicPredicate package is an open-source project available on GitHub. You can view the source code and contribute to its development or report issues.
+
+GitHub Repository: [Sam.DynamicPredicate on GitHub](https://github.com/samanazadi1996/Sam.DynamicPredicate)
+
+Issues and Contributions: Feel free to explore the codebase, report any issues, or suggest improvements through GitHub Issues.
+
+This transparency and accessibility ensure that the project is community-driven and welcomes contributions, fostering continuous improvement and reliability.
 
 ## Conclusion
 
