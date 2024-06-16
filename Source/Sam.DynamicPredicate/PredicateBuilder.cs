@@ -10,19 +10,15 @@ namespace Sam.DynamicPredicate
 {
     public static class PredicateBuilder
     {
-        public static Func<T, bool> Compile<T>(string predicateString)
+        public static Expression<Func<T, bool>> Compile<T>(string predicateString)
         {
             Dictionary<string, Expression<Func<T, bool>>> expressions = new Dictionary<string, Expression<Func<T, bool>>>();
 
             var result = Simplification(predicateString);
 
-
             foreach (var exprDict in result.Expressions)
             {
-                expressions.Add(
-                    exprDict.Key,
-                    GenerateExpression<T>(exprDict.Value));
-
+                expressions.Add(exprDict.Key, GenerateExpression<T>(exprDict.Value));
             }
 
             string logicalExpression = result.LogicalExpression;
@@ -30,11 +26,9 @@ namespace Sam.DynamicPredicate
             var parameter = Expression.Parameter(typeof(T), "x");
             var body = ParseExpression(logicalExpression, expressions, parameter);
 
-            var lambda = Expression.Lambda<Func<T, bool>>(body, parameter);
-            return lambda.Compile();
-
-
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
+
         private static Expression<Func<T, bool>> GenerateExpression<T>(string predicateString)
         {
             var parts = predicateString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -56,7 +50,6 @@ namespace Sam.DynamicPredicate
 
             var member = Expression.Property(parameter, propertyInfo);
 
-
             Expression body = @operator switch
             {
                 "==" => Expression.Equal(member, constant),
@@ -74,19 +67,6 @@ namespace Sam.DynamicPredicate
             return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
-        private static Expression ApplyOperator(string op, Expression left, Expression right)
-        {
-            switch (op)
-            {
-                case "&&":
-                    return Expression.AndAlso(left, right);
-                case "||":
-                    return Expression.OrElse(left, right);
-                default:
-                    throw new InvalidOperationException($"Unknown operator: {op}");
-            }
-        }
-
         private static PredicateResult Simplification(string predicateString)
         {
             var pattern = @"[^&|()]+";
@@ -100,9 +80,7 @@ namespace Sam.DynamicPredicate
             foreach (var item in expressions)
             {
                 var key = Guid.NewGuid().ToString();
-
                 placeholderDict.Add(key, item);
-
                 simplifiedPredicate = simplifiedPredicate.Replace(item, key);
             }
 
@@ -111,65 +89,41 @@ namespace Sam.DynamicPredicate
 
         private static Expression ParseExpression<T>(string expression, Dictionary<string, Expression<Func<T, bool>>> expressions, ParameterExpression parameter)
         {
-            Stack<Expression> stack = new Stack<Expression>();
-            Stack<string> operators = new Stack<string>();
+            var stack = new Stack<Expression>();
+            var operators = new Stack<string>();
+            var tokens = Regex.Split(expression, @"(\(|\)|\&\&|\|\|)").Where(t => !string.IsNullOrWhiteSpace(t)).Select(t => t.Trim()).ToList();
 
-            int i = 0;
-            while (i < expression.Length)
+            foreach (var token in tokens)
             {
-                if (char.IsWhiteSpace(expression[i]))
-                {
-                    i++;
-                    continue;
-                }
-
-                if (expression[i] == '(')
-                {
-                    operators.Push("(");
-                    i++;
-                }
-                else if (expression[i] == ')')
+                if (token == "&&" || token == "||")
                 {
                     while (operators.Count > 0 && operators.Peek() != "(")
                     {
                         var op = operators.Pop();
                         var right = stack.Pop();
                         var left = stack.Pop();
-                        stack.Push(ApplyOperator(op, left, right));
+                        stack.Push(op == "&&" ? Expression.AndAlso(left, right) : Expression.OrElse(left, right));
                     }
-                    if (operators.Count > 0)
+                    operators.Push(token);
+                }
+                else if (token == "(")
+                {
+                    operators.Push(token);
+                }
+                else if (token == ")")
+                {
+                    while (operators.Peek() != "(")
                     {
-                        operators.Pop(); // Pop the '('
+                        var op = operators.Pop();
+                        var right = stack.Pop();
+                        var left = stack.Pop();
+                        stack.Push(op == "&&" ? Expression.AndAlso(left, right) : Expression.OrElse(left, right));
                     }
-                    i++;
-                }
-                else if (expression[i] == '&' && i + 1 < expression.Length && expression[i + 1] == '&')
-                {
-                    operators.Push("&&");
-                    i += 2;
-                }
-                else if (expression[i] == '|' && i + 1 < expression.Length && expression[i + 1] == '|')
-                {
-                    operators.Push("||");
-                    i += 2;
+                    operators.Pop(); // Remove the "("
                 }
                 else
                 {
-                    int j = i;
-                    while (j < expression.Length && !char.IsWhiteSpace(expression[j]) && expression[j] != '(' && expression[j] != ')' && expression[j] != '&' && expression[j] != '|')
-                    {
-                        j++;
-                    }
-                    var token = expression.Substring(i, j - i);
-                    if (expressions.ContainsKey(token))
-                    {
-                        stack.Push(Expression.Invoke(expressions[token], parameter));
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"Invalid expression token '{token}'");
-                    }
-                    i = j;
+                    stack.Push(Expression.Invoke(expressions[token], parameter));
                 }
             }
 
@@ -178,16 +132,10 @@ namespace Sam.DynamicPredicate
                 var op = operators.Pop();
                 var right = stack.Pop();
                 var left = stack.Pop();
-                stack.Push(ApplyOperator(op, left, right));
+                stack.Push(op == "&&" ? Expression.AndAlso(left, right) : Expression.OrElse(left, right));
             }
 
-            if (stack.Count != 1 || operators.Count != 0)
-            {
-                throw new ArgumentException("Invalid expression format");
-            }
-
-            return stack.Pop();
+            return stack.Single();
         }
-
     }
 }

@@ -5,13 +5,13 @@ namespace Sam.DynamicPredicateTests
     public class PersonFilterTests
     {
         // Sample data for testing
-        private readonly List<Person> people = new List<Person>
+        private readonly IQueryable<Person> people = new List<Person>
         {
             new Person { Id=1, Name = "John", Age = 25 },
             new Person { Id=2, Name = "Jane", Age = 10 },
             new Person { Id=3, Name = "Jake", Age = 20 },
             new Person { Id=4, Name = "Jill", Age = 30 }
-        };
+        }.AsQueryable();
 
         [Fact]
         public void Test_FilterByComplexCondition()

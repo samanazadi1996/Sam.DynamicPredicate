@@ -5,9 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{8EE438CE-9AC9-42EA-83B9-58F65737F3DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sam.DynamicPredicate", "Source\Sam.DynamicPredicate\Sam.DynamicPredicate.csproj", "{71BFA304-336C-4E66-BC14-312EC570C959}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.DynamicPredicate", "Source\Sam.DynamicPredicate\Sam.DynamicPredicate.csproj", "{71BFA304-336C-4E66-BC14-312EC570C959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sam.DynamicPredicateTests", "Source\Sam.DynamicPredicateTests\Sam.DynamicPredicateTests.csproj", "{EAD4A6BF-2194-461F-A419-116E9BB81B75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.DynamicPredicateTests", "Source\Sam.DynamicPredicateTests\Sam.DynamicPredicateTests.csproj", "{EAD4A6BF-2194-461F-A419-116E9BB81B75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.DynamicPredicateAPI", "Source\Sam.DynamicPredicateAPI\Sam.DynamicPredicateAPI.csproj", "{3CB57785-398E-4065-9ED6-9E1937E5E8B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{EAD4A6BF-2194-461F-A419-116E9BB81B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAD4A6BF-2194-461F-A419-116E9BB81B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAD4A6BF-2194-461F-A419-116E9BB81B75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CB57785-398E-4065-9ED6-9E1937E5E8B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CB57785-398E-4065-9ED6-9E1937E5E8B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CB57785-398E-4065-9ED6-9E1937E5E8B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CB57785-398E-4065-9ED6-9E1937E5E8B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{71BFA304-336C-4E66-BC14-312EC570C959} = {8EE438CE-9AC9-42EA-83B9-58F65737F3DB}
 		{EAD4A6BF-2194-461F-A419-116E9BB81B75} = {8EE438CE-9AC9-42EA-83B9-58F65737F3DB}
+		{3CB57785-398E-4065-9ED6-9E1937E5E8B3} = {8EE438CE-9AC9-42EA-83B9-58F65737F3DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {730BF638-8BE8-434B-A54D-C6A83ABB4D30}
