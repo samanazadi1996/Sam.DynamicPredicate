@@ -42,7 +42,7 @@ namespace Sam.DynamicPredicate
             {
                 throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'.", nameof(predicateString));
             }
-            var changedType = Convert.ChangeType(valueString.Trim('"'), propertyInfo.PropertyType);
+            var changedType = Convert.ChangeType(valueString.Equals("null") ? null : valueString.Trim('"'), propertyInfo.PropertyType);
 
             var constant = Expression.Convert(Expression.Constant(changedType, propertyInfo.PropertyType), propertyInfo.PropertyType);
 
@@ -59,6 +59,8 @@ namespace Sam.DynamicPredicate
                 "<" => Expression.LessThan(member, constant),
                 "<=" => Expression.LessThanOrEqual(member, constant),
 
+                "Is" => Expression.Equal(member, constant),
+                "IsNot" => Expression.NotEqual(member, constant),
                 "Equal" => Expression.Equal(member, constant),
                 "NotEqual" => Expression.NotEqual(member, constant),
                 "Contains" => Expression.Call(member, "Contains", null, constant),
