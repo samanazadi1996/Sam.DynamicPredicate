@@ -58,6 +58,9 @@ namespace Sam.DynamicPredicate
                 ">=" => Expression.GreaterThanOrEqual(member, constant),
                 "<" => Expression.LessThan(member, constant),
                 "<=" => Expression.LessThanOrEqual(member, constant),
+
+                "Equal" => Expression.Equal(member, constant),
+                "NotEqual" => Expression.NotEqual(member, constant),
                 "Contains" => Expression.Call(member, "Contains", null, constant),
                 "StartsWith" => Expression.Call(member, "StartsWith", null, constant),
                 "EndsWith" => Expression.Call(member, "EndsWith", null, constant),
