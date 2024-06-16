@@ -52,7 +52,7 @@ public class ProductController(ApplicationDbContext applicationDbContext, ILogge
 1. Install Package: Use dotnet add package command to add Sam.DynamicPredicate to your project dependencies.
 2. Controller Setup: ProductController is set up as an ASP.NET Core controller handling HTTP GET requests.
 4. Query Building: Inside the Get() method, _context.Products.AsQueryable() initializes a queryable collection of products from your database.
-5. Dynamic Query: query.Where("Id == 1 || Id == 2 || (Name.StartsWith(\"Pro\") && Price >= 10000)") demonstrates the use of Sam.DynamicPredicate. This method dynamically constructs a LINQ query based on the provided string predicate.
+5. Dynamic Query: query.Where("Id == 1 || Id == 2 || (Name StartsWith Pro && Price >= 10000)") demonstrates the use of Sam.DynamicPredicate. This method dynamically constructs a LINQ query based on the provided string predicate.
 6. Logging: query.ToQueryString() converts the LINQ query to a SQL string, logged using _logger.LogInformation().
 7. Return: The method returns an anonymous object containing the SQL query (SqlQuery) and the asynchronously fetched data (Data) converted to JSON.
 
