@@ -8,7 +8,16 @@ The Sam.DynamicPredicate package allows you to create LINQ queries dynamically b
 
 ### How to Use the Sam.DynamicPredicate Package
 
-To use this package, first add it to your project. You can then use the Compile method to convert predicate strings into LINQ expressions. Here is an example of how to use this package
+To use this package, first install it into your project using the following command
+
+```sh
+dotnet add package Sam.DynamicPredicate
+```
+
+### Example Usage in an ASP.NET Core Controller
+
+After installing the package, you can use it to dynamically build LINQ queries based on string predicates. Below is an example within an ASP.NET Core controller (ProductController):
+
 
 ``` c#
 [ApiController]
@@ -33,12 +42,25 @@ public class ProductController(ApplicationDbContext applicationDbContext, ILogge
     }
 }
 ```
+### Explanation
+
+1. Install Package: Use dotnet add package command to add Sam.DynamicPredicate to your project dependencies.
+2. Controller Setup: ProductController is set up as an ASP.NET Core controller handling HTTP GET requests.
+4. Query Building: Inside the Get() method, _context.Products.AsQueryable() initializes a queryable collection of products from your database.
+5. Dynamic Query: query.Where("Id == 1 || Id == 2 || (Name.StartsWith(\"Pro\") && Price >= 10000)") demonstrates the use of Sam.DynamicPredicate. This method dynamically constructs a LINQ query based on the provided string predicate.
+6. Logging: query.ToQueryString() converts the LINQ query to a SQL string, logged using _logger.LogInformation().
+7. Return: The method returns an anonymous object containing the SQL query (SqlQuery) and the asynchronously fetched data (Data) converted to JSON.
+
+
+
+
+
 #### The value of the sqlQuery variable in this example is as follows
 
 ```sql
 SELECT [p].[Id], [p].[BarCode], [p].[Name], [p].[Price]
 FROM [Products] AS [p]
-WHERE ([p].[Name] LIKE N'Pro%' AND [p].[Price] >= 150000.0E0) OR [p].[Id] = CAST(1 AS bigint) OR [p].[Price] = 105000.0E0
+WHERE [p].[Id] IN (CAST(1 AS bigint), CAST(2 AS bigint)) OR ([p].[Name] LIKE N'Pro%' AND [p].[Price] >= 10000.0E0)
 ```
 
 Note that the where method, which has a string input, is located in the Sam.DynamicPredicate

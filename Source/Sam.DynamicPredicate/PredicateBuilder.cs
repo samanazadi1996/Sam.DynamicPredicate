@@ -10,7 +10,7 @@ namespace Sam.DynamicPredicate
 {
     public static class PredicateBuilder
     {
-        public static Expression<Func<T, bool>> Compile<T>(string predicateString)
+        public static Expression<Func<T, bool>> Build<T>(string predicateString)
         {
             Dictionary<string, Expression<Func<T, bool>>> expressions = new Dictionary<string, Expression<Func<T, bool>>>();
 
