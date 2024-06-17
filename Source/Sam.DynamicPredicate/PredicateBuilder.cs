@@ -97,11 +97,17 @@ namespace Sam.DynamicPredicate
             string ReplaceExact(string input, string search, string replacement)
             {
                 var pattern = $@"\b{Regex.Escape(search)}\b";
-                return Regex.Replace(input, pattern, replacement);
+
+                if (Regex.IsMatch(input, pattern))
+                {
+                    return Regex.Replace(input, pattern, replacement);
+                }
+                else
+                {
+                    return input.Replace(search, replacement);
+                }
             }
-
         }
-
 
         private static Expression ParseExpression<T>(string expression, Dictionary<string, Expression<Func<T, bool>>> expressions, ParameterExpression parameter)
         {
