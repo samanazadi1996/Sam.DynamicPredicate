@@ -77,7 +77,10 @@ namespace Sam.DynamicPredicate
             var pattern = @"[^&|()]+";
             var matches = Regex.Matches(predicateString, pattern);
 
-            var expressions = matches.Select(m => m.Value.Trim()).Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+            var expressions = matches.Select(m => m.Value.Trim())
+                                     .Where(e => !string.IsNullOrWhiteSpace(e))
+                                     .Distinct()
+                                     .ToList();
 
             var placeholderDict = new Dictionary<string, string>();
             string simplifiedPredicate = predicateString;
@@ -85,12 +88,20 @@ namespace Sam.DynamicPredicate
             foreach (var item in expressions)
             {
                 var key = Guid.NewGuid().ToString();
-                placeholderDict.Add(key, item);
-                simplifiedPredicate = simplifiedPredicate.Replace(item, key);
+                placeholderDict[key] = item;
+                simplifiedPredicate = ReplaceExact(simplifiedPredicate, item, key);
             }
 
             return new PredicateResult(simplifiedPredicate, placeholderDict);
+
+            string ReplaceExact(string input, string search, string replacement)
+            {
+                var pattern = $@"\b{Regex.Escape(search)}\b";
+                return Regex.Replace(input, pattern, replacement);
+            }
+
         }
+
 
         private static Expression ParseExpression<T>(string expression, Dictionary<string, Expression<Func<T, bool>>> expressions, ParameterExpression parameter)
         {
